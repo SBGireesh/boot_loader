@@ -149,9 +149,9 @@
 	status = "okay";
 	pinctrl-names = "default";
 	pinctrl-0 = <&sm_i2c_tw3_pmux>;
-	expander0: gpio@43 {
-		compatible = "fcs,fxl6408";
-		reg = <0x43>;
+	expander0: gpio@20 {
+		compatible = "ti,tca6408";
+		reg = <0x20>;
 		gpio-controller;
 		#gpio-cells = <2>;
 	};
