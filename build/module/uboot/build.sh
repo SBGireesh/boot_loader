@@ -7,6 +7,7 @@ source build/security.rc
 echo "u-boot build script called"
 
 build_uboot() {
+  set -x
   pushd ${topdir}/boot/${CONFIG_UBOOT_SRC_PATH}
   local cmd2run
 
@@ -14,12 +15,12 @@ build_uboot() {
   eval "$cmd2run make mrproper"
 
   cmd2run="${cmd2run} KBUILD_OUTPUT=${opt_outdir_intermediate}/output_uboot"
-  cmd2run="${cmd2run} CROSS_COMPILE=${CONFIG_TOOLCHAIN_BSP}"
+  cmd2run="${cmd2run} CROSS_COMPILE=${CONFIG_TOOLCHAIN_BSP}" # HOSTCC=\"${BUILD_CC} ${BUILD_CFLAGS} ${BUILD_LDFLAGS}\""
   cmd2run="${cmd2run}"
 
   eval "CONFIG_RDK_SYS=${CONFIG_RDK_SYS} $cmd2run make mrproper"
-  eval "CONFIG_RDK_SYS=${CONFIG_RDK_SYS} $cmd2run make ${CONFIG_UBOOT_DEFCONFIG} -j${CONFIG_CPU_NUMBER}"
-  eval "CONFIG_RDK_SYS=${CONFIG_RDK_SYS} $cmd2run make EXT_DTB=arch/${CONFIG_UBOOT_ARCH}/dts/${CONFIG_UBOOT_DTS}.dtb -j24"
+  eval "CONFIG_RDK_SYS=${CONFIG_RDK_SYS} $cmd2run make ${CONFIG_UBOOT_DEFCONFIG} -j${CONFIG_CPU_NUMBER} V=1 HOSTCC=gcc"
+  eval "CONFIG_RDK_SYS=${CONFIG_RDK_SYS} $cmd2run make EXT_DTB=arch/${CONFIG_UBOOT_ARCH}/dts/${CONFIG_UBOOT_DTS}.dtb -j24 HOSTCC=gcc"
   popd
 }
 #############
