@@ -179,7 +179,8 @@ obj-$(CONFIG_X86) += x86/
 
 obj-$(CONFIG_ARCH_MVEBU) += mvebu/
 endif # !CONFIG_SPL_BUILD
-
+#Custom command for kernel boot from network
+obj-$(CONFIG_CMD_NETBOOT) += netboot.o
 # core command
 obj-y += nvedit.o
 

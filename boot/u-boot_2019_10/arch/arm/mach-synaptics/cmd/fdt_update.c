@@ -279,7 +279,7 @@ int setup_bootargs(void *fdt)
 	int len = 0;
 	char *newbootargs = NULL;
 	char *bootargs = env_get("bootargs");
-
+	char *bootargs_control = env_get("bootargscontrol");
 	if (!bootargs) {
 		printf("Don't see bootargs ENV, skip updating\n");
 		return 0;
@@ -296,8 +296,10 @@ int setup_bootargs(void *fdt)
 	strcat(newbootargs, " ");
 
 #ifdef CONFIG_SYNA_MMC_SUBOOT
-	setup_rootfs(newbootargs);
-	strcat(newbootargs, " ");
+	if (!bootargs_control || bootargs_control == "n") {
+		setup_rootfs(newbootargs);
+		strcat(newbootargs, " ");
+	}
 #endif
 
 #ifdef CONFIG_TARGET_PLATYPUS

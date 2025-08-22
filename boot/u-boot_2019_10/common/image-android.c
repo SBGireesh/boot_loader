@@ -74,27 +74,23 @@ int android_image_get_kernel(const struct andr_img_hdr *hdr, int verify,
 		printf("Kernel command line: %s\n", hdr->cmdline);
 		len += strlen(hdr->cmdline);
 	}
+	char *bootargs_control = env_get("bootargscontrol");
+        if (!bootargs_control || strcmp(bootargs_control,"n")==0){
+		char *bootargs = env_get("bootargs");
+		if (bootargs)
+			len += strlen(bootargs);
 
-	char *bootargs = env_get("bootargs");
-	if (bootargs)
-		len += strlen(bootargs);
+		char *newbootargs = malloc(len + 2);
+		if (!newbootargs) {
+			puts("Error: malloc in android_image_get_kernel failed!\n");
+			return -ENOMEM;
+		}
+		*newbootargs = '\0';
+		if (*hdr->cmdline)
+			strcat(newbootargs, hdr->cmdline);
 
-	char *newbootargs = malloc(len + 2);
-	if (!newbootargs) {
-		puts("Error: malloc in android_image_get_kernel failed!\n");
-		return -ENOMEM;
+		env_set("bootargs", newbootargs);
 	}
-	*newbootargs = '\0';
-
-	if (bootargs) {
-		strcpy(newbootargs, bootargs);
-		strcat(newbootargs, " ");
-	}
-	if (*hdr->cmdline)
-		strcat(newbootargs, hdr->cmdline);
-
-	env_set("bootargs", newbootargs);
-
 	if (os_data) {
 		if (image_get_magic(ihdr) == IH_MAGIC) {
 			*os_data = image_get_data(ihdr);

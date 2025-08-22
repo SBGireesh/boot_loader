@@ -2102,3 +2102,9 @@ config CMD_UBIFS
 	  UBIFS is a file system for flash devices which works on top of UBI.
 
 endmenu
+
+config CMD_NETBOOT
+    bool "Enable netboot command"
+    help
+      This command allows user to boot a device with kernel acquired from a remote
+      server via tftp
