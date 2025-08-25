@@ -12,7 +12,7 @@ static int do_netboot(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
     char cmd[128];
 
     if (argc != 4) {
-        printf("\nUsage: netboot <kernel_addr> <dtb_offset> <filename>\n");
+		return CMD_RET_USAGE;
     }
     ram_addr = simple_strtoul(argv[1], NULL, 16);
     dtb_offset  = simple_strtoul(argv[2], NULL, 16);
@@ -32,7 +32,7 @@ static int do_netboot(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
     snprintf(cmd, sizeof(cmd), "bootm 0x%08lx - 0x%08lx", kernel_addr, dtb_addr);
     run_command(cmd, 0);
 
-    return 0;
+    return CMD_RET_SUCCESS;
 }
 
 U_BOOT_CMD(
